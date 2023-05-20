@@ -4,6 +4,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class ClientHandller {
     private MyServer server;
@@ -27,7 +29,7 @@ public class ClientHandller {
                 try {
                     authentication();
                     readMessage();
-                } catch (IOException e) {
+                } catch (IOException | SQLException e) {
                     e.printStackTrace();
                 } finally {
                     closeConnection();
@@ -84,7 +86,7 @@ public class ClientHandller {
         }
     }
 
-    public void authentication() throws IOException {
+    public void authentication() throws IOException, SQLException {
         AuthServicce authService = server.getAuthService();
         while (true) {
             String s = in.readUTF();
@@ -103,12 +105,26 @@ public class ClientHandller {
                     System.out.println("Авторизация прошла успешно");
                     return;
                 }
-            }else {
-                System.out.println("Команда не распознана.Авторизуйтесь.: /auth login pass");
+            }else if (s.startsWith("/reg")) {
+                String[] parts1 = s.split("\\s");
+                String login1 = parts1[1];
+                String password1 = parts1[2];
+                String nick = parts1[3];
+                regis(login1,password1,nick);
+            } else {
+                out.writeUTF("Команда не распознана.Авторизуйтесь.: /auth login pass или /reg login pass nick(DB)");
             }
         }
     }
 
+    private void regis(String login,String password,String nick) throws IOException {
+        if (server.getAuthService().reg(login, password, nick)) {
+            out.writeUTF("Регистрация прошла успешно.");
+        } else {
+            out.writeUTF("Регистрация провалилась, аккаунт с таким логином уже существует \n" +
+                        "или произошла ошибка во время попытки регистрации");
+        }
+    }
 
     public void closeConnection() {
         server.unsubscribe(this);

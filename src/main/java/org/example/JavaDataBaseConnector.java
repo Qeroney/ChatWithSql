@@ -13,9 +13,8 @@ public class JavaDataBaseConnector implements DataBaseConnector{
 
     @Override
     public UserDataTuple selectBylogin(String login) throws SQLException {
-        String command = "Select * from newstudents Where login = '"+login+"';";
-        ResultSet resultSet = statement.executeQuery(command);
-        if (resultSet.getString(1).isEmpty() || resultSet.getString(1) == null){
+        ResultSet resultSet = statement.executeQuery("select * from notstudents where login='"+login+"';");
+        if (!resultSet.next()){
             return null;
         }
         String curLg = resultSet.getString(1);
@@ -27,21 +26,19 @@ public class JavaDataBaseConnector implements DataBaseConnector{
     }
     @Override
     public int insertNew(UserDataTuple NeWuser)throws SQLException{
-        String command = "Insert into newstudents(login,password,nickname) value"+
-                "('"+NeWuser.getLogin()+"',"+
-                "('"+NeWuser.getPassword()+"',"+
-                "('"+NeWuser.getNick()+"');";
+        String command = "Insert into notstudents(login,password,nick) value"+
+                "('"+NeWuser.getLogin()+"',"+ "'"+NeWuser.getPassword()+"',"+ "'"+NeWuser.getNick()+"');";
         return statement.executeUpdate(command);
     }
 
     @Override
     public boolean chngNick(String newNick, String currentNick)throws SQLException {
-        String command = "Select count(*) from newstudents Where nick = '"+newNick+"';";
+        String command = "Select count(*) from notstudents Where nick = '"+newNick+"';";
         ResultSet resultSet = statement.executeQuery(command);
         if(resultSet.getInt(1) != 0){
             return false;
         }
-        String command2 = "Update newstudents set nick = '"+newNick+"' Where nick = '"+currentNick+"';";
+        String command2 = "Update notstudents set nick = '"+newNick+"' Where nick = '"+currentNick+"';";
         statement.executeUpdate(command2);
         return true;
     }

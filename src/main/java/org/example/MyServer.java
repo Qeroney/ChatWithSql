@@ -3,6 +3,7 @@ package org.example;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,9 +19,10 @@ public class MyServer {
     }
 
 
-    public MyServer() {
+    public MyServer(){
         try (ServerSocket server = new ServerSocket(PORT)) {
-            authService = new InMemoryAuth();
+            DataBaseConnector connector = new JavaDataBaseConnector();
+            authService = new DataBaseAuthServiceImpl(connector);
             clients = new ArrayList<>();
             while (true) {
                 System.out.println("Сервер ожидает подключения");
@@ -28,7 +30,7 @@ public class MyServer {
                 System.out.println("Клиент подключился: " + socket.getInetAddress());
                 new ClientHandller(this, socket);
             }
-        } catch (IOException e) {
+        } catch (IOException | SQLException e) {
             e.printStackTrace();
             System.out.println("Ошибка в работе сервера");
         }

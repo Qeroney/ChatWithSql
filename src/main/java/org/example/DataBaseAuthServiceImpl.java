@@ -1,10 +1,13 @@
 package org.example;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DataBaseAuthServiceImpl implements AuthServicce{
-    private DataBaseConnector connector;
+    public DataBaseConnector connector;
+
+    public DataBaseAuthServiceImpl(DataBaseConnector connector) {
+        this.connector = connector;
+    }
 
     @Override
     public boolean authenticate(String login, String password) {
@@ -21,7 +24,7 @@ public class DataBaseAuthServiceImpl implements AuthServicce{
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        if(user!=null){
+        if(user==null){
             return false;
         }
         if(user.getPassword().equals(password)){
@@ -30,6 +33,7 @@ public class DataBaseAuthServiceImpl implements AuthServicce{
         return false;
     }
 
+
     @Override
     public String getNick(String login) {
         try {
@@ -37,7 +41,7 @@ public class DataBaseAuthServiceImpl implements AuthServicce{
             return userDataTuple.getNick();
         }catch (SQLException e){
             e.printStackTrace();
-            return "";
+            return " ";
         }
     }
 

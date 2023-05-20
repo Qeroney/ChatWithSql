@@ -15,7 +15,7 @@ public class Client {
 
     public static void main(String[] args){
         try {
-            socket = new Socket("192.168.0.101",8189);
+            socket = new Socket("192.168.0.100",8189);
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
             Scanner sc = new Scanner(System.in);
