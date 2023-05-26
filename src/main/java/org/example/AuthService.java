@@ -1,15 +1,12 @@
 package org.example;
 
-import java.sql.SQLException;
-import java.util.List;
-
-public interface AuthServicce {
+public interface AuthService {
 
     boolean authenticate(String login, String password);
 
     String getNick(String login);
 
-    boolean changeNick(String newNick,ClientHandller client);
+    boolean changeNick(String newNick, ClientHandler client);
     boolean reg(String login,String password,String nickname);
 
 }

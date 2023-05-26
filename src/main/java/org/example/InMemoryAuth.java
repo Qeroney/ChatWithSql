@@ -3,13 +3,13 @@ package org.example;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InMemoryAuth implements AuthServicce {
+public class InMemoryAuth implements AuthService {
 
 
     private final List<UserDataTuple> userData = new ArrayList<>(List.of(
-            new UserDataTuple("user1", "qweasdzxc", "Bedolaga"),
-            new UserDataTuple("user2", "cxzdsaewq", "YourBunnyWrote"),
-            new UserDataTuple("user3", "qwaszx", "AgentBob")
+            new UserDataTuple("user1", "pass1", "Bedolaga"),
+            new UserDataTuple("user2", "pass2", "YourBunnyWrote"),
+            new UserDataTuple("user3", "pass3", "AgentBob")
     ));
 
     @Override
@@ -41,7 +41,7 @@ public class InMemoryAuth implements AuthServicce {
         return null;
     }
     @Override
-    public boolean changeNick(String newNick, ClientHandller client) {
+    public boolean changeNick(String newNick, ClientHandler client) {
         for (UserDataTuple userDatum : userData) {
             if(userDatum.getNick().equals(newNick)){
                 return false;
