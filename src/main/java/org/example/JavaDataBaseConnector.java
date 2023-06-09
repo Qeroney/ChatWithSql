@@ -12,7 +12,7 @@ public class JavaDataBaseConnector implements DataBaseConnector{
 
 
     @Override
-    public UserDataTuple selectBylogin(String login) throws SQLException {
+    public UserDataTuple selectByLogin(String login) throws SQLException {
         ResultSet resultSet = statement.executeQuery("select * from notstudents where login='"+login+"';");
         if (!resultSet.next()){
             return null;
@@ -25,22 +25,18 @@ public class JavaDataBaseConnector implements DataBaseConnector{
 
     }
     @Override
-    public int insertNew(UserDataTuple NeWuser)throws SQLException{
-        String command = "Insert into notstudents(login,password,nick) value"+
-                "('"+NeWuser.getLogin()+"',"+ "'"+NeWuser.getPassword()+"',"+ "'"+NeWuser.getNick()+"');";
-        return statement.executeUpdate(command);
+    public int insertNew(UserDataTuple NewUser) throws SQLException{
+        return statement.executeUpdate( "Insert into notstudents(login,password,nick) value"+
+                "('"+ NewUser.getLogin()+"',"+ "'"+ NewUser.getPassword()+"',"+ "'"+ NewUser.getNick()+"');");
     }
 
     @Override
-    public boolean chngNick(String newNick, String currentNick)throws SQLException {
-        String command = "Select count(*) from notstudents Where nick = '"+newNick+"';";
-        ResultSet resultSet = statement.executeQuery(command);
+    public boolean chnNick(String newNick, String currentNick) throws SQLException {
+        ResultSet resultSet = statement.executeQuery ( "Select count(*) from notstudents Where nick = '"+newNick+"';");
         if(resultSet.getInt(1) != 0){
             return false;
         }
-        String command2 = "Update notstudents set nick = '"+newNick+"' Where nick = '"+currentNick+"';";
-        statement.executeUpdate(command2);
+        statement.executeUpdate ( "Update notstudents set nick = '"+newNick+"' Where nick = '"+currentNick+"';");
         return true;
     }
-
 }

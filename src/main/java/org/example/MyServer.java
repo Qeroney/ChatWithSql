@@ -11,10 +11,10 @@ public class MyServer {
 
     private final int PORT = 8189;
 
-    private List<ClientHandller> clients;
-    private AuthServicce authService;
+    private List<ClientHandler> clients;
+    private AuthService authService;
 
-    public AuthServicce getAuthService() {
+    public AuthService getAuthService() {
         return authService;
     }
 
@@ -28,7 +28,7 @@ public class MyServer {
                 System.out.println("Сервер ожидает подключения");
                 Socket socket = server.accept();
                 System.out.println("Клиент подключился: " + socket.getInetAddress());
-                new ClientHandller(this, socket);
+                new ClientHandler(this, socket);
             }
         } catch (IOException | SQLException e) {
             e.printStackTrace();
@@ -37,7 +37,7 @@ public class MyServer {
     }
 
     public synchronized boolean isNickBusy(String nickname) {
-        for (ClientHandller client : clients) {
+        for (ClientHandler client : clients) {
             if (client.getCurrentNick().equals(nickname)) {
                 return true;
             }
@@ -45,23 +45,22 @@ public class MyServer {
         return false;
     }
 
-
     public synchronized void broadcastMsg(String msg){
-        for (ClientHandller client : clients) {
+        for (ClientHandler client : clients) {
             client.sendMsg(msg);
         }
     }
 
-    public synchronized void unsubscribe (ClientHandller client){
+    public synchronized void unsubscribe (ClientHandler client){
         clients.remove(client);
     }
 
-    public synchronized void subscribe (ClientHandller client){
+    public synchronized void subscribe (ClientHandler client){
         clients.add(client);
     }
 
     public synchronized void whisper(String nick, String text) {
-        for (ClientHandller client : clients) {
+        for (ClientHandler client : clients) {
             if (client.getCurrentNick().equals(nick)){
                 client.sendMsg(text);
             }

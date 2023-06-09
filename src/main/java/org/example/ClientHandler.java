@@ -4,10 +4,9 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ClientHandller {
+public class ClientHandler {
     private MyServer server;
     private Socket socket;
     private DataOutputStream out;
@@ -18,7 +17,7 @@ public class ClientHandller {
         return currentNick;
     }
 
-    public ClientHandller(MyServer server, Socket client) {
+    public ClientHandler(MyServer server, Socket client) {
         try {
             this.server = server;
             this.socket = client;
@@ -44,7 +43,7 @@ public class ClientHandller {
         while (true) {
             String clientMessage = in.readUTF();
             if (clientMessage.equals("/end")) {
-                return;
+                closeConnection();
             }else if(clientMessage.startsWith("/changeNick")){
                 String[] parts = clientMessage.split(" ");
                 String newNick = parts[1];
@@ -59,7 +58,6 @@ public class ClientHandller {
             server.broadcastMsg(currentNick + ":" + clientMessage);
         }
     }
-
     private void whisper(String nick, String text) {
         if(server.isNickBusy(nick)){
             server.whisper(nick,text);
@@ -69,7 +67,7 @@ public class ClientHandller {
     }
 
     private void changeNick(String newNick) {
-        AuthServicce authService = server.getAuthService();
+        AuthService authService = server.getAuthService();
         if(authService.changeNick(newNick,this)){
             currentNick = newNick;
             sendMsg("Ник поменян");
@@ -87,7 +85,7 @@ public class ClientHandller {
     }
 
     public void authentication() throws IOException, SQLException {
-        AuthServicce authService = server.getAuthService();
+        AuthService authService = server.getAuthService();
         while (true) {
             String s = in.readUTF();
             if (s.startsWith("/auth")) {
@@ -105,7 +103,7 @@ public class ClientHandller {
                     System.out.println("Авторизация прошла успешно");
                     return;
                 }
-            }else if (s.startsWith("/reg")) {
+            } else if (s.startsWith("/reg")) {
                 String[] parts1 = s.split("\\s");
                 String login1 = parts1[1];
                 String password1 = parts1[2];

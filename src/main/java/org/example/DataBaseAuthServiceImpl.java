@@ -2,7 +2,7 @@ package org.example;
 
 import java.sql.SQLException;
 
-public class DataBaseAuthServiceImpl implements AuthServicce{
+public class DataBaseAuthServiceImpl implements AuthService {
     public DataBaseConnector connector;
 
     public DataBaseAuthServiceImpl(DataBaseConnector connector) {
@@ -20,7 +20,7 @@ public class DataBaseAuthServiceImpl implements AuthServicce{
         }
         UserDataTuple user = null;
         try {
-            user = connector.selectBylogin(login);
+            user = connector.selectByLogin(login);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -37,7 +37,7 @@ public class DataBaseAuthServiceImpl implements AuthServicce{
     @Override
     public String getNick(String login) {
         try {
-            UserDataTuple userDataTuple = connector.selectBylogin(login);
+            UserDataTuple userDataTuple = connector.selectByLogin(login);
             return userDataTuple.getNick();
         }catch (SQLException e){
             e.printStackTrace();
@@ -46,13 +46,13 @@ public class DataBaseAuthServiceImpl implements AuthServicce{
     }
 
     @Override
-    public boolean changeNick(String newNick, ClientHandller client) {
+    public boolean changeNick(String newNick, ClientHandler client) {
         String currentNick1 = client.getCurrentNick();
         try {
             if (currentNick1.equals(newNick)) {
                 return false;
             }
-            connector.chngNick(newNick,currentNick1);
+            connector.chnNick(newNick,currentNick1);
         }catch (SQLException e){
             e.printStackTrace();
         }
@@ -62,12 +62,12 @@ public class DataBaseAuthServiceImpl implements AuthServicce{
     @Override
     public boolean reg(String login, String password, String nickname) {
         try {
-            UserDataTuple userDataTuple = connector.selectBylogin(login);
+            UserDataTuple userDataTuple = connector.selectByLogin(login);
             if(userDataTuple !=null){
                 return false;
             }
-            UserDataTuple NeWuser = new UserDataTuple(login,password,nickname);
-            int i = connector.insertNew(NeWuser);
+            UserDataTuple NewUser = new UserDataTuple(login,password,nickname);
+            int i = connector.insertNew(NewUser);
             if(i!=1){
                 return false;
             }

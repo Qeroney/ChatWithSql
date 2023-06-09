@@ -4,9 +4,10 @@ import java.sql.SQLException;
 
 public interface DataBaseConnector  {
 
-    UserDataTuple selectBylogin(String login) throws SQLException;
+    UserDataTuple selectByLogin(String login) throws SQLException;
 
-    int insertNew(UserDataTuple NeWuser) throws SQLException;
+    int insertNew(UserDataTuple NewUser) throws SQLException;
 
-    boolean chngNick(String newNick,String currentNick) throws SQLException;
+    boolean chnNick(String newNick, String currentNick) throws SQLException;
+
 }
